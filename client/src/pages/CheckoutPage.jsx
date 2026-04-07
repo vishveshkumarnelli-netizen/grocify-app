@@ -138,7 +138,7 @@ const totalPrice = cartTotal + deliveryFee - discount;
         }
 
         const options = {
-          key: import.meta.env.VITE_RAZORPAY_KEY_ID, // You'll need to add this to your env
+          key: "rzp_test_SYUF1DM8iTbMk6", // You'll need to add this to your env
           amount: data.razorpayOrder.amount,
           currency: data.razorpayOrder.currency,
           name: "Grocify",
