@@ -18,7 +18,7 @@ const app = express();
 // ✅ CORS (Frontend + Admin)
 app.use(
   cors({
-    origin: ["http://localhost:5173", "http://localhost:5174","https://grocify-app-seven.vercel.app/login"],
+    origin: ["http://localhost:5173", "http://localhost:5174","https://grocify-app-seven.vercel.app","https://grocify-app-q5yy.vercel.app"],
     credentials: true,
   })
 );
