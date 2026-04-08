@@ -517,7 +517,7 @@ const totalPrice = cartTotal + deliveryFee - discount;
 // import { createOrder } from '../services/api'
 
 // const SLOTS = [
-//   { id:'express',   label:'⚡ Express (60 min)',    price:'₹40',  free: false },
+//   { id:'express',   label:'⚡ Express (60 min)',    price:'₹60',  free: false },
 //   { id:'morning',   label:'🌅 Morning (8–10 AM)',   price:'FREE', free: true  },
 //   { id:'afternoon', label:'🌞 Afternoon (12–2 PM)', price:'FREE', free: true  },
 //   { id:'evening',   label:'🌆 Evening (6–8 PM)',    price:'FREE', free: true  },
