@@ -342,7 +342,7 @@ const totalPrice = cartTotal + deliveryFee - discount;
                     className={`text-xs font-bold mt-1 ${s.free ? "text-green-600" : "text-amber-500"}`}
                   >
                     {/* {s.price}  */}
-                    {/* /* {s.free ? "FREE" : `₹${s.price}`} */ */}
+                    
                     {s.id === "express"
                       ? "₹60"
                       : cartTotal >= 500
