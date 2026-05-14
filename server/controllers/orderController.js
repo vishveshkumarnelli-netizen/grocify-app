@@ -12,7 +12,7 @@ const createOrder = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("No order items");
   }
-
+  
   // 🔹 Calculate items
   let itemsPrice = 0;
   const orderItems = [];
