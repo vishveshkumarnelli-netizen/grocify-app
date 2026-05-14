@@ -295,7 +295,7 @@ const updateOrderStatus = asyncHandler(async (req, res) => {
   res.json({ success: true, order });
 });
 
-
+      
 // @route GET /api/orders (admin)
 const getAllOrders = asyncHandler(async (req, res) => {
   const orders = await Order.find({})
