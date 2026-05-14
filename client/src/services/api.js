@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const api = axios.create({ baseURL: '/api' })
+const api = axios.create({ baseURL: 'https://grocify-app-08jf.onrender.com/api' })
 
 // Attach JWT on every request
 api.interceptors.request.use(cfg => {

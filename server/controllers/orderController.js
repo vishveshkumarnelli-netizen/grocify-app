@@ -42,21 +42,52 @@ const createOrder = asyncHandler(async (req, res) => {
     });
   }
 
+
+  // ✅ 2. DELIVERY LOGIC (FIXED)
+  let deliveryPrice = 0;
+
+  if (deliverySlot === "express") {
+    deliveryPrice = 60;
+  } else {
+    deliveryPrice = itemsPrice >= 500 ? 0 : 40;
+  }
+
+  // ✅ 3. COUPON LOGIC (WITH CONDITIONS)
+  let discountAmount = 0;
+  const code = couponCode?.toUpperCase();
+
+  if (code === "FIRST50") {
+    discountAmount = 50;
+  }
+
+  if (code === "SAVE100") {
+    if (itemsPrice >= 500) {
+      discountAmount = 100;
+    }
+  }
+
+  if (code === "WKND20") {
+    discountAmount = Math.round(itemsPrice * 0.2);
+  }
+
+  // ✅ 4. FINAL TOTAL
+  const totalPrice = Math.max(itemsPrice + deliveryPrice - discountAmount, 0);
+
   // 🔹 Delivery Logic (MATCH FRONTEND)
   const deliveryPrice =
     deliverySlot === "express"
       ? 0
       : itemsPrice >= 500
       ? 0
-      : 60;
+      : 40;
 
   // 🔹 Coupons
-  let discountAmount = 0;
-  if (couponCode === "FIRST50") discountAmount = 50;
-  else if (couponCode === "WKND20") discountAmount = Math.round(itemsPrice * 0.2);
-  else if (couponCode === "SAVE100") discountAmount = itemsPrice >= 800 ? 100 : 0;
+  // let discountAmount = 0;
+  // if (couponCode === "FIRST50") discountAmount = 50;
+  // else if (couponCode === "WKND20") discountAmount = Math.round(itemsPrice * 0.2);
+  // else if (couponCode === "SAVE100") discountAmount = itemsPrice >= 800 ? 100 : 0;
 
-  const totalPrice = itemsPrice + deliveryPrice - discountAmount;
+  // const totalPrice = itemsPrice + deliveryPrice - discountAmount;
 
   // 🔹 Razorpay Order (only for online)
   let razorpayOrder = null;
@@ -66,14 +97,25 @@ const createOrder = asyncHandler(async (req, res) => {
       res.status(500);
       throw new Error("Payment gateway not configured");
     }
-
-    razorpayOrder = await razorpay.orders.create({
-      amount: totalPrice * 100,
-      currency: "INR",
-      receipt: `order_${Date.now()}`,
-      payment_capture: 1,
-    });
+    try {
+      razorpayOrder = await razorpay.orders.create({
+        amount: totalPrice * 100, // Razorpay expects amount in paisa
+        currency: 'INR',
+        receipt: `order_${Date.now()}`, // Temporary receipt
+        payment_capture: 1, // Auto capture
+      });
+    } catch (error) {
+      res.status(500);
+      throw new Error('Payment gateway error: ' + error.message);
+    }
   }
+    // razorpayOrder = await razorpay.orders.create({
+    //   amount: totalPrice * 100,
+    //   currency: "INR",
+    //   receipt: `order_${Date.now()}`,
+    //   payment_capture: 1,
+    // });
+
 
   // 🔹 Create Order
   const order = await Order.create({
@@ -159,6 +201,12 @@ const verifyPayment = asyncHandler(async (req, res) => {
   };
 
   await order.save();
+  // ✅ NOW update stock (SAFE)
+  for (const item of order.items) {
+    await Product.findByIdAndUpdate(item.product, {
+      $inc: { stock: -item.quantity, sold: item.quantity },
+    });
+  }
 
   res.json({ success: true, order });
 });

@@ -14,7 +14,7 @@ import { createOrder, verifyPayment } from "../services/api";
 
 
 const SLOTS = [
-  { id: "express", label: "⚡ Express (60 min)", price: 40, free: false },
+  { id: "express", label: "⚡ Express (60 min)", price: 60, free: false },
   { id: "morning", label: "🌅 Morning (8–10 AM)", price: 0, free: true },
   { id: "afternoon", label: "🌞 Afternoon (12–2 PM)", price: 0, free: true },
   { id: "evening", label: "🌆 Evening (6–8 PM)", price: 0, free: true },
@@ -70,11 +70,11 @@ const totalPrice = cartTotal + deliveryFee - discount;
   const [placing, setPlacing] = useState(false);
   const [razorpayLoaded, setRazorpayLoaded] = useState(false);
 
-  const COUPONS = {
-    FIRST50: 50,
-    WKND20: Math.round(cartTotal * 0.2),
-    SAVE100: 100,
-  };
+  // const COUPONS = {
+  //   FIRST50: 50,
+  //   WKND20: Math.round(cartTotal * 0.2),
+  //   SAVE100: 100,
+  // };
 
   // Load Razorpay script
   useEffect(() => {
@@ -88,17 +88,58 @@ const totalPrice = cartTotal + deliveryFee - discount;
   const handleInput = (e) =>
     setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
-  const applyCoupon = () => {
-    const val = COUPONS[coupon.toUpperCase()];
-    if (val) {
-      setDiscount(val);
-      setCouponMsg(`✅ Coupon applied! You saved ₹${val}`);
-      toast.success(`Coupon applied – ₹${val} off!`);
-    } else {
+   const applyCoupon = () => {
+    if (!coupon) {
       setDiscount(0);
-      setCouponMsg("❌ Invalid coupon code");
+      setCouponMsg("❌ Enter a coupon code");
+      return;
     }
+
+    const code = coupon.toUpperCase();
+
+    if (code === "FIRST50") {
+      setDiscount(50);
+      setCouponMsg("✅ ₹50 discount applied");
+      toast.success("₹50 OFF applied!");
+      return;
+    }
+
+    if (code === "SAVE100") {
+      if (cartTotal >= 500) {
+        setDiscount(100);
+        setCouponMsg("✅ ₹100 discount applied");
+        toast.success("₹100 OFF applied!");
+      } else {
+        setDiscount(0);
+        setCouponMsg("❌ Minimum ₹800 required");
+      }
+      return;
+    }
+
+    if (code === "WKND20") {
+      const val = Math.round(cartTotal * 0.2);
+      setDiscount(val);
+      setCouponMsg(`✅ 20% OFF (₹${val})`);
+      toast.success("20% OFF applied!");
+      return;
+    }
+
+    // ❌ Invalid
+    setDiscount(0);
+    setCouponMsg("❌ Invalid coupon code");
   };
+
+  // const applyCoupon = () => {
+  //   const val = COUPONS[coupon.toUpperCase()];
+  //   if (val) {
+  //     setDiscount(val);
+  //     setCouponMsg(`✅ Coupon applied! You saved ₹${val}`);
+  //     toast.success(`Coupon applied – ₹${val} off!`);
+  //   } else {
+  //     setDiscount(0);
+  //     setCouponMsg("❌ Invalid coupon code");
+  //   }
+  // };
 
   const handlePlaceOrder = async () => {
     if (!form.name || !form.phone || !form.street || !form.pincode) {
@@ -138,7 +179,7 @@ const totalPrice = cartTotal + deliveryFee - discount;
         }
 
         const options = {
-          key: import.meta.env.VITE_RAZORPAY_KEY_ID, // You'll need to add this to your env
+          key: "rzp_test_SYUF1DM8iTbMk6", // You'll need to add this to your env
           amount: data.razorpayOrder.amount,
           currency: data.razorpayOrder.currency,
           name: "Grocify",
@@ -301,7 +342,12 @@ const totalPrice = cartTotal + deliveryFee - discount;
                     className={`text-xs font-bold mt-1 ${s.free ? "text-green-600" : "text-amber-500"}`}
                   >
                     {/* {s.price}  */}
-                    {s.free ? "FREE" : `₹${s.price}`}
+                    
+                    {s.id === "express"
+                      ? "₹60"
+                      : cartTotal >= 500
+                        ? "FREE"
+                        : "₹40"}
                   </div>
                 </button>
               ))}
@@ -471,7 +517,7 @@ const totalPrice = cartTotal + deliveryFee - discount;
 // import { createOrder } from '../services/api'
 
 // const SLOTS = [
-//   { id:'express',   label:'⚡ Express (60 min)',    price:'₹40',  free: false },
+//   { id:'express',   label:'⚡ Express (60 min)',    price:'₹60',  free: false },
 //   { id:'morning',   label:'🌅 Morning (8–10 AM)',   price:'FREE', free: true  },
 //   { id:'afternoon', label:'🌞 Afternoon (12–2 PM)', price:'FREE', free: true  },
 //   { id:'evening',   label:'🌆 Evening (6–8 PM)',    price:'FREE', free: true  },

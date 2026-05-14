@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     port: 5174,
     proxy: {
-      '/api': { target: 'http://localhost:5000', changeOrigin: true },
+      '/api': { target: 'https://grocify-app-08jf.onrender.com', changeOrigin: true },
     },
   },
 })

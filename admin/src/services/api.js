@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const api = axios.create({ baseURL: '/api' })
+const api = axios.create({ baseURL: 'https://grocify-app-08jf.onrender.com/api' })
 
 api.interceptors.request.use(cfg => {
   const token = localStorage.getItem('grocify_admin_token')
