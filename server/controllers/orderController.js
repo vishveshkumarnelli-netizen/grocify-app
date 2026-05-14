@@ -79,7 +79,7 @@ const createOrder = asyncHandler(async (req, res) => {
       ? 0
       : itemsPrice >= 500
       ? 0
-      : 60;
+      : 40;
 
   // 🔹 Coupons
   let discountAmount = 0;
