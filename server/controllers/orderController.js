@@ -82,10 +82,10 @@ const createOrder = asyncHandler(async (req, res) => {
       : 40;
 
   // 🔹 Coupons
-  // let discountAmount = 0;
-  // if (couponCode === "FIRST50") discountAmount = 50;
-  // else if (couponCode === "WKND20") discountAmount = Math.round(itemsPrice * 0.2);
-  // else if (couponCode === "SAVE100") discountAmount = itemsPrice >= 800 ? 100 : 0;
+  let discountAmount = 0;
+  if (couponCode === "FIRST50") discountAmount = 50;
+  else if (couponCode === "WKND20") discountAmount = Math.round(itemsPrice * 0.2);
+  else if (couponCode === "SAVE100") discountAmount = itemsPrice >= 800 ? 100 : 0;
 
   // const totalPrice = itemsPrice + deliveryPrice - discountAmount;
 
