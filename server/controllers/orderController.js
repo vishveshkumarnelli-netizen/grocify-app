@@ -315,5 +315,3 @@ module.exports = {
   getAllOrders,
   cancelOrder,
 };
-
-// module.exports = { createOrder, getMyOrders, getOrderById, updateOrderToPaid, updateOrderStatus, getAllOrders, cancelOrder, };
