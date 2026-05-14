@@ -86,7 +86,6 @@ const createOrder = asyncHandler(async (req, res) => {
   if (couponCode === "FIRST50") discountAmount = 50;
   else if (couponCode === "WKND20") discountAmount = Math.round(itemsPrice * 0.2);
   else if (couponCode === "SAVE100") discountAmount = itemsPrice >= 800 ? 100 : 0;
-
   
   // 🔹 Razorpay Order (only for online)
   let razorpayOrder = null;
